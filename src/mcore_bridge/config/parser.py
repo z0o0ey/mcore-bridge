@@ -97,7 +97,17 @@ config_mapping = {
     'dspark_block_size': ['dspark_block_size'],
     'dspark_noise_token_id': ['dspark_noise_token_id'],
     'dspark_target_layer_ids': ['dspark_target_layer_ids'],
-    'dspark_markov_rank': ['dspark_markov_rank'],
+    # deepseek-v4-flash-vision
+    'vision_n_layers': ['vision_n_layers'],
+    'vision_dim': ['vision_dim'],
+    'vision_n_heads': ['vision_n_heads'],
+    'vision_inter_dim': ['vision_inter_dim'],
+    'vision_patch_size': ['vision_patch_size'],
+    'vision_rope_theta': ['vision_rope_theta'],
+    'vision_downsample_ratio': ['vision_downsample_ratio'],
+    'vision_max_n_token': ['vision_max_n_token'],
+    'vision_min_pixels': ['vision_min_pixels'],
+    'vision_max_wh_ratio': ['vision_max_wh_ratio'],
     # other
     'original_max_position_embeddings': ['original_max_position_embeddings'],
     'partial_rotary_factor': ['partial_rotary_factor'],
@@ -211,6 +221,8 @@ def hf_to_mcore_config(hf_config: PretrainedConfig) -> Dict[str, Any]:
             res['moe_n_hash_layers'] = len([layer for layer in moe_n_hash_layers if layer == 'hash_moe'])
             if res.get('dspark_target_layer_ids'):
                 res['dspark_enabled'] = True
+            if res.get('vision_n_layers'):
+                res['moe_router_enable_vl_bias'] = True
     elif llm_model_type == 'hunyuan':
         # Since HunYuan’s attention applies RoPE before using q/k_layernorm,
         # which is incompatible with megatron-core, support is not provided here.
